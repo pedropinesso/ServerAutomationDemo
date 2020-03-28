@@ -1,14 +1,14 @@
 #region Var setup
 $resourceGroupName = 'ServerAutomationDemo'
-$region = 'XXXXXXX'
+$region = 'eastus'
 $localVMAdminPw = 'I like azure.' ## a single password for demo purposes
 $projectName = 'ServerAutomationDemo' ## common term used through set up
 
-$subscriptionName = 'XXXXXXXXXX'
-$subscriptionId = 'XXXXXXXX'
-$tenantId = 'XXXXXXX'
-$orgName = 'adbertram'
-$gitHubRepoUrl = "https://github.com/$orgName/<repo name>"
+$subscriptionName = 'Free Trial'
+$subscriptionId = '09d6205f-139a-4b66-a4f1-4f00cc3c2d60'
+$tenantId = 'f5372822-a92d-478d-8b20-357aaa258c53'
+$orgName = 'pedromarins98'
+$gitHubRepoUrl = "https://github.com/pedropinesso/ServerAutomationDemo"
 
 #endregion
 
@@ -18,7 +18,7 @@ az account set --subscription $subscriptionName
 #endregion
 
 #region Install the Azure CLI DevOps extension
-az devops configure --defaults organization=https://dev.azure.com/$orgName
+az devops configure --defaults organization=https://dev.azure.com/pedromarins98
 #endregion
 
 #region Create the resource group to put everything in
@@ -34,7 +34,7 @@ $sp = az ad sp create-for-rbac --name $spIdUri | ConvertFrom-Json
 
 ## Create the key vault. Enabling for template deployment because we'll be using it during an ARM deployment
 ## via an Azure DevOps pipeline later
-$kvName = "$projectName-KV"
+$kvName = "$projectName-K" #V removed for the sake of this muttafucking code work
 $keyVault = az keyvault create --location $region --name $kvName --resource-group $resourceGroupName --enabled-for-template-deployment true | ConvertFrom-Json
 
 # ## Create the key vault secrets
@@ -45,12 +45,12 @@ az keyvault secret set --name StandardVmAdminPassword --value $localVMAdminPw --
 $null = az keyvault set-policy --name $kvName --spn $spIdUri --secret-permissions get list
 #endregion
 
-#region Instal the Pester test runner extension in the org
+#region Install the Pester test runner extension in the org
 az devops extension install --extension-id PesterRunner --publisher-id Pester
 #endregion
 
-#region Create the Azure DevOps project
-az devops project create --name $projectName
+#region Create the Azure DevOps project/I already have those
+az devops project create --name $projectName 
 az devops configure --defaults project=$projectName
 #endregion
 
